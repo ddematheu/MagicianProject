@@ -19,7 +19,6 @@ public class MagicianApp {
     public static void main(String[] args) {
         // TODO code application logic here
         MainFrame main = new MainFrame();
-        main.setSize(700, 380);
         main.setVisible(true);
         
     }
