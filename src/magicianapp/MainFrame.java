@@ -8,17 +8,23 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Vector;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import static magicianapp.BookingList.AddBooking;
+import static magicianapp.BookingList.CancelBooking;
 import static magicianapp.BookingList.StatusHoliday;
 import static magicianapp.BookingList.StatusMagician;
+import static magicianapp.BookingList.getAllNames;
 import static magicianapp.BookingList.showBooks;
+import static magicianapp.Holiday.addHol;
 import static magicianapp.Holiday.getAllHol;
 import static magicianapp.Magician.getAllMag;
+import static magicianapp.Magician.addMagician;
+import static magicianapp.Magician.removeMagician;
 import static magicianapp.WaitingList.ShowWaitlist;
 
 /*
@@ -38,8 +44,13 @@ public class MainFrame extends javax.swing.JFrame {
      */
     String Magician = "";
     String Holiday = "";
+    String MagicianAdd = "";
+    String HolidayAdd = "";
     String Status = "";
     String Customer = "";
+    String CancelCustomer = "";
+    String CancelHoliday = "";
+    String RemoveMag = "";
     public MainFrame() {
         super("Magician Database");
         initComponents();
@@ -70,6 +81,7 @@ public class MainFrame extends javax.swing.JFrame {
         CustomerText = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         BookBut = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
         StatusCombo = new javax.swing.JComboBox<>();
@@ -78,6 +90,25 @@ public class MainFrame extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         holidayCombo1 = new javax.swing.JComboBox<>();
         jLabel5 = new javax.swing.JLabel();
+        jPanel3 = new javax.swing.JPanel();
+        jLabel6 = new javax.swing.JLabel();
+        AddHol = new javax.swing.JButton();
+        Text_Hol_Add = new javax.swing.JTextField();
+        jPanel4 = new javax.swing.JPanel();
+        jPanel5 = new javax.swing.JPanel();
+        jLabel7 = new javax.swing.JLabel();
+        AddMag = new javax.swing.JButton();
+        Text_Mag_Add = new javax.swing.JTextField();
+        jPanel6 = new javax.swing.JPanel();
+        jLabel8 = new javax.swing.JLabel();
+        holidayCombo2 = new javax.swing.JComboBox<>();
+        jLabel9 = new javax.swing.JLabel();
+        BookBut1 = new javax.swing.JButton();
+        ComboNames = new javax.swing.JComboBox<>();
+        jPanel7 = new javax.swing.JPanel();
+        jLabel10 = new javax.swing.JLabel();
+        magiciansCombo1 = new javax.swing.JComboBox<>();
+        RevMag = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(0, 0, 0));
@@ -134,6 +165,13 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
 
+        jButton1.setText("Show");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -149,19 +187,22 @@ public class MainFrame extends javax.swing.JFrame {
                 .addComponent(CustomerText, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(BookBut, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(82, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(jButton1)
+                .addContainerGap(69, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(24, 24, 24)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(holidayCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3)
                     .addComponent(CustomerText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(BookBut))
-                .addContainerGap(55, Short.MAX_VALUE))
+                    .addComponent(BookBut)
+                    .addComponent(jButton1))
+                .addContainerGap(53, Short.MAX_VALUE))
         );
 
         BookingsTab.addTab("Booking", jPanel1);
@@ -230,7 +271,7 @@ public class MainFrame extends javax.swing.JFrame {
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(20, 20, 20)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(magiciansCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -239,10 +280,217 @@ public class MainFrame extends javax.swing.JFrame {
                     .addComponent(jLabel4)
                     .addComponent(StatusCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(StatBut))
-                .addGap(0, 55, Short.MAX_VALUE))
+                .addGap(0, 57, Short.MAX_VALUE))
         );
 
         BookingsTab.addTab("Status", jPanel2);
+
+        jLabel6.setText("Holiday:");
+
+        AddHol.setText("Go");
+        AddHol.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                AddHolActionPerformed(evt);
+            }
+        });
+
+        Text_Hol_Add.setText("Enter Name");
+        Text_Hol_Add.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Text_Hol_AddActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel6)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(Text_Hol_Add, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(AddHol)
+                .addContainerGap(359, Short.MAX_VALUE))
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(16, 16, 16)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(Text_Hol_Add, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(AddHol)
+                    .addComponent(jLabel6))
+                .addContainerGap(33, Short.MAX_VALUE))
+        );
+
+        BookingsTab.addTab("Add Holiday", jPanel3);
+
+        jLabel7.setText("Magician:");
+
+        AddMag.setText("Go");
+        AddMag.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                AddMagActionPerformed(evt);
+            }
+        });
+
+        Text_Mag_Add.setText("Enter Name");
+        Text_Mag_Add.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Text_Mag_AddActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel7)
+                .addGap(18, 18, 18)
+                .addComponent(Text_Mag_Add, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(AddMag)
+                .addContainerGap(339, Short.MAX_VALUE))
+        );
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addGap(19, 19, 19)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel7)
+                    .addComponent(Text_Mag_Add, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(AddMag))
+                .addContainerGap(30, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 601, Short.MAX_VALUE)
+            .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel4Layout.createSequentialGroup()
+                    .addGap(0, 0, Short.MAX_VALUE)
+                    .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(0, 0, Short.MAX_VALUE)))
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 72, Short.MAX_VALUE)
+            .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel4Layout.createSequentialGroup()
+                    .addGap(0, 0, Short.MAX_VALUE)
+                    .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(0, 0, Short.MAX_VALUE)))
+        );
+
+        BookingsTab.addTab("Add Magician", jPanel4);
+
+        jLabel8.setText("Holiday:");
+
+        ArrayList holComb2 = getAllHol();
+        holidayCombo2.setModel(new DefaultComboBoxModel(holComb2.toArray()));
+        holidayCombo2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                holidayCombo2ActionPerformed(evt);
+            }
+        });
+
+        jLabel9.setText("Customer:");
+
+        BookBut1.setText("Cancel");
+        BookBut1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BookBut1ActionPerformed(evt);
+            }
+        });
+
+        ArrayList Names = getAllNames();
+        ComboNames.setModel(new DefaultComboBoxModel(Names.toArray()));
+        ComboNames.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ComboNamesActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
+        jPanel6.setLayout(jPanel6Layout);
+        jPanel6Layout.setHorizontalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel8)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(holidayCombo2, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel9)
+                .addGap(18, 18, 18)
+                .addComponent(ComboNames, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(BookBut1, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(125, Short.MAX_VALUE))
+        );
+        jPanel6Layout.setVerticalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addGap(23, 23, 23)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(holidayCombo2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel9)
+                    .addComponent(BookBut1)
+                    .addComponent(ComboNames, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(26, Short.MAX_VALUE))
+        );
+
+        BookingsTab.addTab("Cancel Booking", jPanel6);
+
+        jLabel10.setText("Magician:");
+
+        ArrayList magComb2 = getAllMag();
+        magiciansCombo1.setModel(new DefaultComboBoxModel(magComb2.toArray()));
+        magiciansCombo1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                magiciansCombo1ActionPerformed(evt);
+            }
+        });
+
+        RevMag.setText("Go");
+        RevMag.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                RevMagActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
+        jPanel7.setLayout(jPanel7Layout);
+        jPanel7Layout.setHorizontalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel7Layout.createSequentialGroup()
+                .addGap(7, 7, 7)
+                .addComponent(jLabel10)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(magiciansCombo1, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(39, 39, 39)
+                .addComponent(RevMag)
+                .addContainerGap(328, Short.MAX_VALUE))
+        );
+        jPanel7Layout.setVerticalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel7Layout.createSequentialGroup()
+                .addGap(23, 23, 23)
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(RevMag)
+                    .addComponent(magiciansCombo1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel10))
+                .addContainerGap(26, Short.MAX_VALUE))
+        );
+
+        BookingsTab.addTab("Remove Magician", jPanel7);
 
         getContentPane().add(BookingsTab, new java.awt.GridBagConstraints());
 
@@ -292,9 +540,78 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void holidayCombo1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_holidayCombo1ActionPerformed
         // TODO add your handling code here:
-            Holiday = (String) holidayCombo.getSelectedItem();
-        System.out.println(Holiday);
+            Holiday = (String) holidayCombo1.getSelectedItem();
+            System.out.println(Holiday);
     }//GEN-LAST:event_holidayCombo1ActionPerformed
+
+    private void AddHolActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AddHolActionPerformed
+        // TODO add your handling code here:
+                addHol(HolidayAdd);
+                ArrayList holComb1 = getAllHol();
+                holidayCombo1.setModel(new DefaultComboBoxModel(holComb1.toArray()));
+                holidayCombo.setModel(new DefaultComboBoxModel(holComb1.toArray()));
+                holidayCombo2.setModel(new DefaultComboBoxModel(holComb1.toArray()));
+    }//GEN-LAST:event_AddHolActionPerformed
+
+    private void Text_Hol_AddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Text_Hol_AddActionPerformed
+        // TODO add your handling code here:
+                HolidayAdd = (String) Text_Hol_Add.getText();
+                System.out.println(HolidayAdd);
+    }//GEN-LAST:event_Text_Hol_AddActionPerformed
+
+    private void AddMagActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AddMagActionPerformed
+        // TODO add your handling code here:
+        addMagician(MagicianAdd);
+        ArrayList magComb = getAllMag();
+        magiciansCombo.setModel(new DefaultComboBoxModel(magComb.toArray()));
+        magiciansCombo1.setModel(new DefaultComboBoxModel(magComb.toArray()));
+        ArrayList table = showBooks();
+        FillTable(Table, table);
+    }//GEN-LAST:event_AddMagActionPerformed
+
+    private void Text_Mag_AddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Text_Mag_AddActionPerformed
+        // TODO add your handling code here:
+        MagicianAdd = (String) Text_Mag_Add.getText();
+        
+    }//GEN-LAST:event_Text_Mag_AddActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        ArrayList table = showBooks();
+        FillTable(Table, table);
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void holidayCombo2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_holidayCombo2ActionPerformed
+        // TODO add your handling code here:
+        CancelHoliday = (String) holidayCombo2.getSelectedItem();
+    }//GEN-LAST:event_holidayCombo2ActionPerformed
+
+    private void BookBut1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BookBut1ActionPerformed
+        // TODO add your handling code here:
+        CancelBooking(CancelCustomer,CancelHoliday);
+        ArrayList table = showBooks();
+        FillTable(Table, table);
+    }//GEN-LAST:event_BookBut1ActionPerformed
+
+    private void magiciansCombo1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_magiciansCombo1ActionPerformed
+        // TODO add your handling code here:
+        RemoveMag = (String) magiciansCombo1.getSelectedItem();
+    }//GEN-LAST:event_magiciansCombo1ActionPerformed
+
+    private void RevMagActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RevMagActionPerformed
+        // TODO add your handling code here:
+        removeMagician(RemoveMag);
+        ArrayList magComb = getAllMag();
+        magiciansCombo.setModel(new DefaultComboBoxModel(magComb.toArray()));
+        magiciansCombo1.setModel(new DefaultComboBoxModel(magComb.toArray()));
+        ArrayList table = showBooks();
+        FillTable(Table, table);
+    }//GEN-LAST:event_RevMagActionPerformed
+
+    private void ComboNamesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ComboNamesActionPerformed
+        // TODO add your handling code here:
+        CancelCustomer = (String) ComboNames.getSelectedItem();
+    }//GEN-LAST:event_ComboNamesActionPerformed
 
     public void FillTable(JTable jtable,  ArrayList table)
 {
@@ -308,25 +625,24 @@ public class MainFrame extends javax.swing.JFrame {
         }
         System.out.println("row's removed");
         model.setColumnCount(0);
-        ArrayList<?> Columns = (ArrayList<?>) table.get(0);    
-        String one = (String) Columns.get(0);
-        String two = (String) Columns.get(1);
-        String three = (String) Columns.get(2);
-        System.out.println(one+" "+two+" "+three);
-        model.addColumn(one);
-        model.addColumn(two);
-        model.addColumn(three);
+        ArrayList<?> Columns = (ArrayList<?>) table.get(0);  
+        for(int i = 0;i<Columns.size();i++)
+        {
+            String name = (String) Columns.get(i);
+            model.addColumn(name);
+        }
         
         int size = table.size();
             for(int i =1;i<size;i++)
             {
-        ArrayList<?> data = (ArrayList<?>) table.get(i);    
-        String n = (String) data.get(0);
-        String e = (String) data.get(1);
-        String f = (String) data.get(2);
-                //Object[][]data={{n,e}};
-                // This will add row from the DB as the last row in the JTable.
-                model.insertRow(Table.getRowCount(), new Object[] {n, e,f});
+        ArrayList<?> data = (ArrayList<?>) table.get(i); 
+        Vector row = new Vector();
+        for(int j = 0;j<data.size();j++)
+        {
+            
+            row.add((String) data.get(j));
+        }
+        model.insertRow(Table.getRowCount(), row);
 
             }
         //Object[][]data={{n,e}};
@@ -374,12 +690,19 @@ public class MainFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton AddHol;
+    private javax.swing.JButton AddMag;
     private javax.swing.JButton BookBut;
+    private javax.swing.JButton BookBut1;
     private javax.swing.JTabbedPane BookingsTab;
+    private javax.swing.JComboBox<String> ComboNames;
     private javax.swing.JTextField CustomerText;
+    private javax.swing.JButton RevMag;
     private javax.swing.JButton StatBut;
     private javax.swing.JComboBox<String> StatusCombo;
     private javax.swing.JTable Table;
+    private javax.swing.JTextField Text_Hol_Add;
+    private javax.swing.JTextField Text_Mag_Add;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.ButtonGroup buttonGroup2;
     private javax.swing.ButtonGroup buttonGroup3;
@@ -387,14 +710,27 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.ButtonGroup buttonGroup5;
     private javax.swing.JComboBox<String> holidayCombo;
     private javax.swing.JComboBox<String> holidayCombo1;
+    private javax.swing.JComboBox<String> holidayCombo2;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
+    private javax.swing.JPanel jPanel7;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JComboBox<String> magiciansCombo;
+    private javax.swing.JComboBox<String> magiciansCombo1;
     // End of variables declaration//GEN-END:variables
 }
