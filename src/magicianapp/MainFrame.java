@@ -444,7 +444,7 @@ public class MainFrame extends javax.swing.JFrame {
                     .addComponent(jLabel9)
                     .addComponent(BookBut1)
                     .addComponent(ComboNames, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(26, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         BookingsTab.addTab("Cancel Booking", jPanel6);
@@ -487,7 +487,7 @@ public class MainFrame extends javax.swing.JFrame {
                     .addComponent(RevMag)
                     .addComponent(magiciansCombo1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel10))
-                .addContainerGap(26, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         BookingsTab.addTab("Remove Magician", jPanel7);
@@ -505,15 +505,13 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void BookButActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BookButActionPerformed
         // TODO add your handling code here:
-        AddBooking(Holiday, Customer);
+        AddBooking(Holiday,(String) CustomerText.getText());
         ArrayList table = showBooks();
         FillTable(Table, table);
     }//GEN-LAST:event_BookButActionPerformed
 
     private void CustomerTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CustomerTextActionPerformed
         // TODO add your handling code here:
-        Customer = (String) CustomerText.getText();
-        System.out.println(Customer);
     }//GEN-LAST:event_CustomerTextActionPerformed
 
     private void magiciansComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_magiciansComboActionPerformed
@@ -546,7 +544,7 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void AddHolActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AddHolActionPerformed
         // TODO add your handling code here:
-                addHol(HolidayAdd);
+                addHol((String) Text_Hol_Add.getText());
                 ArrayList holComb1 = getAllHol();
                 holidayCombo1.setModel(new DefaultComboBoxModel(holComb1.toArray()));
                 holidayCombo.setModel(new DefaultComboBoxModel(holComb1.toArray()));
@@ -554,14 +552,12 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_AddHolActionPerformed
 
     private void Text_Hol_AddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Text_Hol_AddActionPerformed
-        // TODO add your handling code here:
-                HolidayAdd = (String) Text_Hol_Add.getText();
-                System.out.println(HolidayAdd);
+
     }//GEN-LAST:event_Text_Hol_AddActionPerformed
 
     private void AddMagActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AddMagActionPerformed
         // TODO add your handling code here:
-        addMagician(MagicianAdd);
+        addMagician((String) Text_Mag_Add.getText());
         ArrayList magComb = getAllMag();
         magiciansCombo.setModel(new DefaultComboBoxModel(magComb.toArray()));
         magiciansCombo1.setModel(new DefaultComboBoxModel(magComb.toArray()));
@@ -571,7 +567,6 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void Text_Mag_AddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Text_Mag_AddActionPerformed
         // TODO add your handling code here:
-        MagicianAdd = (String) Text_Mag_Add.getText();
         
     }//GEN-LAST:event_Text_Mag_AddActionPerformed
 
